@@ -12,4 +12,6 @@ const store = createStore(
   composeWithDevTools(applyMiddleware(logger, thunk, routerMiddleware(history)))
 )
 
+window.store = store
+
 export default store

@@ -1,18 +1,23 @@
 import React, { Component } from "react"
 import { Route, NavLink } from "react-router-dom"
+import { connect } from "react-redux"
+
+import { signUp, moduleMame } from "../../ducks/auth"
 
 import SignInForm from "../auth/sign-in-form"
 import SignUpForm from "../auth/sign-up-form"
+import Loader from "../common/loader"
 
-export default class AuthPage extends Component {
+class AuthPage extends Component {
   handleSignIn = values => {
     console.log("handle sign in", values)
   }
-  handleSignUp = values => {
-    console.log("handle sign up", values)
+  handleSignUp = ({ email, password }) => {
+    this.props.signUp(email, password)
   }
 
   render() {
+    const { loading } = this.props
     return (
       <div>
         <h1>Auth Page</h1>
@@ -30,7 +35,15 @@ export default class AuthPage extends Component {
           path="/auth/signup"
           render={() => <SignUpForm onSubmit={this.handleSignUp} />}
         />
+        {loading && <Loader />}
       </div>
     )
   }
 }
+
+export default connect(
+  state => ({
+    loading: state[moduleMame].loading
+  }),
+  { signUp }
+)(AuthPage)

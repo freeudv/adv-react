@@ -1,0 +1,34 @@
+import React, { Component } from "react"
+import { Route } from "react-router-dom"
+import { connect } from "react-redux"
+
+import { moduleMame } from "../../ducks/auth"
+
+import UnAuthorized from "../common/unauthorized"
+
+class ProtectedRoute extends Component {
+  renderProtected = routeProps => {
+    const { component: ProtectedComponent, authorized } = this.props
+
+    return authorized ? (
+      <ProtectedComponent {...routeProps} />
+    ) : (
+      <UnAuthorized />
+    )
+  }
+
+  render() {
+    const { component, ...rest } = this.props
+
+    return <Route {...rest} render={this.renderProtected} />
+  }
+}
+
+export default connect(
+  state => ({
+    authorized: !!state[moduleMame].user
+  }),
+  null,
+  null,
+  { pure: false }
+)(ProtectedRoute)
