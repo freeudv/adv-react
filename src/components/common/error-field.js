@@ -1,14 +1,12 @@
 import React from "react"
 
-function ErrorField(props) {
-  const { input, type, meta: { error, touched } } = props
+const ErrorField = ({ input, label, type, meta: { error, touched } }) => {
   const errorText = touched &&
     error && <div style={{ color: "tomato" }}>{error}</div>
 
-  console.log("props", props)
   return (
     <div>
-      <label>{input.name}</label>
+      <label>{label}</label>
       <input type={type} {...input} />
       {errorText}
     </div>

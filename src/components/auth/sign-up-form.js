@@ -12,8 +12,18 @@ class SingUpForm extends Component {
       <div>
         <h2>Sign Up</h2>
         <form onSubmit={handleSubmit}>
-          <Field name="email" component={ErrorField} type="email" />
-          <Field name="password" component={ErrorField} type="password" />
+          <Field
+            name="email"
+            component={ErrorField}
+            type="email"
+            label="Email"
+          />
+          <Field
+            name="password"
+            component={ErrorField}
+            type="password"
+            label="Password"
+          />
           <button type="submit">Submit</button>
         </form>
       </div>

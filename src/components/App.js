@@ -5,6 +5,7 @@ import { Route } from "react-router-dom"
 
 import AdminPage from "./routes/admin-page"
 import AuthPage from "./routes/auth-page"
+import PeoplePage from "./routes/people-page"
 import ProtectedRoute from "./common/protected-route"
 
 class App extends Component {
@@ -20,6 +21,7 @@ class App extends Component {
       <div>
         <ProtectedRoute path="/admin" component={AdminPage} />
         <Route path="/auth" component={AuthPage} />
+        <Route path="/people" component={PeoplePage} />
       </div>
     )
   }

@@ -11,11 +11,16 @@ class SingInForm extends Component {
         <form onSubmit={handleSubmit}>
           <div>
             <label>Email</label>
-            <Field name="email" component="input" type="email" />
+            <Field name="email" component="input" type="email" label="Email" />
           </div>
           <div>
             <label>Password</label>
-            <Field name="password" component="input" type="password" />
+            <Field
+              name="password"
+              component="input"
+              type="password"
+              label="Password"
+            />
           </div>
           <button type="submit">Submit</button>
         </form>
