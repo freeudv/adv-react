@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import { Route } from "react-router-dom"
 import { connect } from "react-redux"
 
-import { moduleMame } from "../../ducks/auth"
+import { moduleName } from "../../ducks/auth"
 
 import UnAuthorized from "../common/unauthorized"
 
@@ -26,7 +26,7 @@ class ProtectedRoute extends Component {
 
 export default connect(
   state => ({
-    authorized: !!state[moduleMame].user
+    authorized: !!state[moduleName].user
   }),
   null,
   null,

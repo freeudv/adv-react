@@ -15,10 +15,10 @@ const PersonRecord = Record({
   email: null
 })
 
-export const moduleMame = "people"
+export const moduleName = "people"
 
-export const ADD_PERSON_REQUEST = `${appName}/${moduleMame}/ADD_PERSON_REQUEST`
-export const ADD_PERSON = `${appName}/${moduleMame}/ADD_PERSON`
+export const ADD_PERSON_REQUEST = `${appName}/${moduleName}/ADD_PERSON_REQUEST`
+export const ADD_PERSON = `${appName}/${moduleName}/ADD_PERSON`
 
 export default function reducer(state = new ReducerState(), action) {
   const { type, payload } = action
