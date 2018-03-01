@@ -1,5 +1,8 @@
 import { appName } from "../firebaseConfig"
 import { Record, List } from "immutable"
+import { put, call, takeEvery } from "redux-saga/effects"
+
+import { generateId } from "../utils"
 
 const ReducerState = Record({
   entities: new List([])
@@ -14,6 +17,7 @@ const PersonRecord = Record({
 
 export const moduleMame = "people"
 
+export const ADD_PERSON_REQUEST = `${appName}/${moduleMame}/ADD_PERSON_REQUEST`
 export const ADD_PERSON = `${appName}/${moduleMame}/ADD_PERSON`
 
 export default function reducer(state = new ReducerState(), action) {
@@ -22,7 +26,7 @@ export default function reducer(state = new ReducerState(), action) {
   switch (type) {
     case ADD_PERSON:
       return state.update("entities", entities =>
-        entities.push(new PersonRecord(payload.person))
+        entities.push(new PersonRecord(payload))
       )
 
     default:
@@ -30,11 +34,34 @@ export default function reducer(state = new ReducerState(), action) {
   }
 }
 
-export const addPerson = person => dispatch => {
-  dispatch({
+// export const addPerson = person => dispatch => {
+//   dispatch({
+//     type: ADD_PERSON,
+//     payload: {
+//       person: { id: Date.now(), ...person }
+//     }
+//   })
+// }
+
+export const addPerson = person => ({
+  type: ADD_PERSON_REQUEST,
+  payload: person
+})
+
+//export for tests
+export const addPersonSaga = function*(action) {
+  const id = yield call(generateId)
+
+  yield put({
     type: ADD_PERSON,
     payload: {
-      person: { id: Date.now(), ...person }
+      ...action.payload,
+      id
     }
   })
+}
+
+//common saga for all actions
+export const saga = function*() {
+  yield takeEvery(ADD_PERSON_REQUEST, addPersonSaga)
 }

@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 
-import { addPerson, moduleMame } from "../../ducks/people"
+import { addPerson } from "../../ducks/people"
 
 import NewPersonForm from "../people/new-person-form"
 
