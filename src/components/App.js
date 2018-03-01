@@ -8,6 +8,7 @@ import { moduleName, signOut } from "../ducks/auth"
 import AdminPage from "./routes/admin-page"
 import AuthPage from "./routes/auth-page"
 import PeoplePage from "./routes/people-page"
+import EventsPage from "./routes/events-page"
 import ProtectedRoute from "./common/protected-route"
 
 class App extends Component {
@@ -30,9 +31,10 @@ class App extends Component {
     return (
       <div>
         {btn}
-        <ProtectedRoute path="/admin" component={AdminPage} />
         <Route path="/auth" component={AuthPage} />
-        <Route path="/people" component={PeoplePage} />
+        <ProtectedRoute path="/admin" component={AdminPage} />
+        <ProtectedRoute path="/people" component={PeoplePage} />
+        <ProtectedRoute path="/events" component={EventsPage} />
       </div>
     )
   }
