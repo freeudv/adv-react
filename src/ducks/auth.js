@@ -4,7 +4,7 @@ import { Record } from "immutable"
 import { push } from "react-router-redux"
 import { all, take, call, put, takeEvery, cps } from "redux-saga/effects"
 
-const ReducerRecord = Record({
+export const ReducerRecord = Record({
   user: null,
   error: null,
   loading: false
@@ -86,16 +86,16 @@ export const signUpSaga = function*() {
     const action = yield take(SIGN_UP_REQUEST)
 
     try {
-      yield call(
+      const user = yield call(
         [auth, auth.createUserWithEmailAndPassword],
         action.payload.email,
         action.payload.password
       )
 
-      // yield put({
-      //   type: SIGN_UP_SUCCESS,
-      //   payload: { user }
-      // })
+      yield put({
+        type: SIGN_UP_SUCCESS,
+        payload: { user }
+      })
     } catch (error) {
       yield put({
         type: SIGN_UP_ERROR,
@@ -113,14 +113,19 @@ export const signInSaga = function*() {
     const action = yield take(SIGN_IN_REQUEST)
 
     try {
-      yield call(
+      const user = yield call(
         [auth, auth.signInWithEmailAndPassword],
         action.payload.email,
         action.payload.password
       )
+
+      yield put({
+        type: SIGN_IN_SUCCESS,
+        payload: { user }
+      })
     } catch (error) {
       yield put({
-        type: SIGN_UP_ERROR,
+        type: SIGN_IN_ERROR,
         error
       })
     }
@@ -149,17 +154,16 @@ export const signOutSaga = function*() {
 //   })
 // })
 
+//this function don't work
 export const watchStatusChange = function*() {
   const auth = firebase.auth()
   console.log("onAuthStateChanged")
 
   try {
-    console.log("---", 1)
     yield cps([auth, auth.onAuthStateChanged])
     //cps is a function, that works like node's callbacks - first argument is an error
     //so in our case there no error and user instead of error. So we can catch them.
   } catch (user) {
-    console.log("---", 2)
     yield put({
       type: SIGN_IN_SUCCESS,
       payload: { user }

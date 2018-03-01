@@ -1,6 +1,7 @@
 import { appName } from "../firebaseConfig"
 import { Record, List } from "immutable"
 import { put, call, takeEvery } from "redux-saga/effects"
+import { reset } from "redux-form"
 
 import { generateId } from "../utils"
 
@@ -59,6 +60,8 @@ export const addPersonSaga = function*(action) {
       id
     }
   })
+
+  yield put(reset("person"))
 }
 
 //common saga for all actions
