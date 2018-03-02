@@ -8,19 +8,31 @@ import {
 
 import Loader from "../common/loader"
 
-class EventsList extends Component {
+//export for tests
+export class EventsList extends Component {
   componentDidMount() {
     this.props.fetchAll()
   }
 
-  getRows = () =>
-    this.props.events.map(event => (
-      <tr key={event.uid}>
+  handleRowClick = uid => {
+    const { selectEvent } = this.props
+
+    selectEvent && selectEvent(uid)
+  }
+
+  getRows = () => {
+    return this.props.events.map(event => (
+      <tr
+        key={event.uid}
+        onClick={this.handleRowClick(event.uid)}
+        className="test--event-list__row"
+      >
         <td>{event.title}</td>
         <td>{event.where}</td>
         <td>{event.month}</td>
       </tr>
     ))
+  }
 
   render() {
     if (this.props.loading) return <Loader />
