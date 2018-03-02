@@ -1,6 +1,6 @@
 import firebase from "firebase"
 import { appName } from "../firebaseConfig"
-import { Record, OrderedMap } from "immutable"
+import { Record, OrderedMap, OrderedSet } from "immutable"
 import { all, take, put, call } from "redux-saga/effects"
 import { createSelector } from "reselect"
 
@@ -10,9 +10,11 @@ export const moduleName = "events"
 
 export const FETCH_ALL_REQUEST = `${appName}/${moduleName}/FETCH_ALL_REQUEST`
 export const FETCH_ALL_SUCCESS = `${appName}/${moduleName}/FETCH_ALL_SUCCESS`
+export const SELECT_EVENT = `${appName}/${moduleName}/SELECT_EVENT`
 
 export const ReducerState = Record({
   entities: new OrderedMap({}),
+  selected: new OrderedSet([]),
   loading: false,
   loaded: false
 })
@@ -40,6 +42,11 @@ export default function reducer(state = new ReducerState(), action) {
         .set("loaded", true)
         .set("entities", fbDataEntities(payload, EventRecord))
 
+    case SELECT_EVENT:
+      return state.selected.contains(payload.uid)
+        ? state.update("selected", selected => selected.remove(payload.uid))
+        : state.update("selected", selected => selected.add(payload.uid))
+
     default:
       return state
   }
@@ -66,6 +73,11 @@ export const loadingSelector = createSelector(
 */
 export const fetchAll = () => ({
   type: FETCH_ALL_REQUEST
+})
+
+export const selectEvent = uid => ({
+  type: SELECT_EVENT,
+  payload: { uid }
 })
 
 /*

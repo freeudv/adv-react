@@ -3,13 +3,14 @@ import { connect } from "react-redux"
 import {
   loadingSelector,
   eventListSelector,
-  fetchAll
+  fetchAll,
+  selectEvent
 } from "../../ducks/events"
 
 import Loader from "../common/loader"
 
 //export for tests
-export class EventsList extends Component {
+export class EventList extends Component {
   componentDidMount() {
     this.props.fetchAll()
   }
@@ -24,7 +25,7 @@ export class EventsList extends Component {
     return this.props.events.map(event => (
       <tr
         key={event.uid}
-        onClick={this.handleRowClick(event.uid)}
+        onClick={() => this.handleRowClick(event.uid)}
         className="test--event-list__row"
       >
         <td>{event.title}</td>
@@ -53,5 +54,5 @@ export default connect(
     events: eventListSelector(state),
     loading: loadingSelector(state)
   }),
-  { fetchAll }
-)(EventsList)
+  { fetchAll, selectEvent }
+)(EventList)

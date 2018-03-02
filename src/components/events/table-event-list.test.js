@@ -2,7 +2,7 @@ import React from "react"
 import Enzyme, { shallow, mount } from "enzyme"
 import Adapter from "enzyme-adapter-react-16"
 
-import { EventsList } from "./events-list"
+import { EventList } from "./table-event-list"
 import Loader from "../common/loader.js"
 import events from "../../mocks/conferences"
 import { EventRecord } from "../../ducks/events"
@@ -17,9 +17,9 @@ const testEvents = events.map(
     })
 )
 
-describe("<EventsList /> Component", () => {
+describe("<EventList /> Component", () => {
   it("should render loader", () => {
-    const container = shallow(<EventsList loading fetchAll={() => {}} />)
+    const container = shallow(<EventList loading fetchAll={() => {}} />)
 
     expect(container.contains(<Loader />))
     //or
@@ -28,7 +28,7 @@ describe("<EventsList /> Component", () => {
 
   it("should render events list", () => {
     const container = shallow(
-      <EventsList events={testEvents} fetchAll={jest.fn()} />
+      <EventList events={testEvents} fetchAll={jest.fn()} />
     )
 
     expect(container.find(".test--event-list__row").length).toBe(
@@ -37,7 +37,7 @@ describe("<EventsList /> Component", () => {
   })
 
   it("should request fetch data", done => {
-    mount(<EventsList events={[]} fetchAll={done} />)
+    mount(<EventList events={[]} fetchAll={done} />)
   })
 
   it("should select event", () => {
@@ -45,7 +45,7 @@ describe("<EventsList /> Component", () => {
     const selectEvent = uid => (seleted = uid)
 
     const container = mount(
-      <EventsList
+      <EventList
         events={testEvents}
         fetchAll={() => {}}
         selectEvent={selectEvent}
