@@ -44,11 +44,17 @@ export default function reducer(state = new ReducerState(), action) {
 //   })
 // }
 
+/*
+**Action creators
+*/
 export const addPerson = person => ({
   type: ADD_PERSON_REQUEST,
   payload: person
 })
 
+/*
+**Sagas
+*/
 //export for tests
 export const addPersonSaga = function*(action) {
   const id = yield call(generateId)

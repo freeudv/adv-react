@@ -41,7 +41,9 @@ export default function reducer(state = new ReducerRecord(), action) {
   }
 }
 
-//action creator
+/*
+**Action creators
+*/
 // export const signUp = (email, password) => dispatch => {
 //   dispatch({ type: SIGN_UP_REQUEST })
 
@@ -78,6 +80,9 @@ export const signOut = () => ({
   type: SIGN_OUT_REQUEST
 })
 
+/*
+**Sagas
+*/
 export const signUpSaga = function*() {
   const auth = firebase.auth()
 
