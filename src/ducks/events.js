@@ -66,18 +66,26 @@ export default function reducer(state = new ReducerState(), action) {
 **Selectors
 */
 export const stateSelector = state => state[moduleName]
-export const eventsSelector = createSelector(
+export const entitiesSelector = createSelector(
   stateSelector,
   state => state.entities
 )
-export const eventListSelector = createSelector(eventsSelector, entities =>
+export const eventListSelector = createSelector(entitiesSelector, entities =>
   entities.valueSeq().toArray()
 )
 export const loadingSelector = createSelector(
   stateSelector,
   state => state.loading
 )
-
+export const sectionSelector = createSelector(
+  stateSelector,
+  state => state.selected
+)
+export const selectedEventsSelector = createSelector(
+  entitiesSelector,
+  sectionSelector,
+  (entities, selection) => selection.map(uid => entities.get(uid))
+)
 /*
 **Action creators
 */
