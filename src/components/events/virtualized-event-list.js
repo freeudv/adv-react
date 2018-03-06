@@ -10,6 +10,8 @@ import {
   selectEvent
 } from "../../ducks/events"
 
+import TableRow from "./table-row"
+import Trash from "./trash"
 import Loader from "../common/loader"
 
 //export for tests
@@ -31,35 +33,41 @@ export class EventList extends Component {
     console.log("----", "load more")
   }
 
+  getRowRenderer = rowCtx => <TableRow {...rowCtx} />
+
   render() {
     const { loading, events } = this.props
     //if (loading) return <Loader />
 
     return (
-      <InfiniteLoader
-        isRowLoaded={this.isRowLoaded}
-        loadMoreRows={this.loadMoreRows}
-        rowCount={loading ? events.length : events.length + 1}
-      >
-        {({ onRowsRendered, registerChild }) => (
-          <Table
-            onRowsRendered={onRowsRendered}
-            ref={registerChild}
-            width={700}
-            height={300}
-            headerHeight={50}
-            rowHeight={40}
-            rowCount={events.length}
-            rowGetter={({ index }) => events[index]}
-            overscanRowCount={5}
-            onRowClick={this.handleRowClick}
-          >
-            <Column label="Title" dataKey="title" width={250} />
-            <Column label="Where" dataKey="where" width={250} />
-            <Column label="When" dataKey="when" width={200} />
-          </Table>
-        )}
-      </InfiniteLoader>
+      <div>
+        <Trash />
+        <InfiniteLoader
+          isRowLoaded={this.isRowLoaded}
+          loadMoreRows={this.loadMoreRows}
+          rowCount={loading ? events.length : events.length + 1}
+        >
+          {({ onRowsRendered, registerChild }) => (
+            <Table
+              ref={registerChild}
+              width={700}
+              height={300}
+              headerHeight={50}
+              rowHeight={40}
+              rowCount={events.length}
+              rowGetter={({ index }) => events[index]}
+              overscanRowCount={5}
+              onRowClick={this.handleRowClick}
+              onRowsRendered={onRowsRendered}
+              rowRenderer={this.getRowRenderer}
+            >
+              <Column label="Title" dataKey="title" width={250} />
+              <Column label="Where" dataKey="where" width={250} />
+              <Column label="When" dataKey="when" width={200} />
+            </Table>
+          )}
+        </InfiniteLoader>
+      </div>
     )
   }
 }

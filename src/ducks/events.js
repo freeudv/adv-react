@@ -1,7 +1,7 @@
 import firebase from "firebase"
 import { appName } from "../firebaseConfig"
 import { Record, OrderedMap, OrderedSet } from "immutable"
-import { all, take, put, call, select } from "redux-saga/effects"
+import { all, take, put, call, select, takeEvery } from "redux-saga/effects"
 import { createSelector } from "reselect"
 
 import { fbDataEntities } from "../utils"
@@ -14,6 +14,8 @@ export const FETCH_LAZY_REQUEST = `${appName}/${moduleName}/FETCH_LAZY_REQUEST`
 export const FETCH_LAZY_START = `${appName}/${moduleName}/FETCH_LAZY_START`
 export const FETCH_LAZY_SUCCESS = `${appName}/${moduleName}/FETCH_LAZY_SUCCESS`
 export const SELECT_EVENT = `${appName}/${moduleName}/SELECT_EVENT`
+export const DELETE_EVENT_REQUEST = `${appName}/${moduleName}/DELETE_EVENT_REQUEST`
+export const DELETE_EVENT_SUCCESS = `${appName}/${moduleName}/DELETE_EVENT_SUCCESS`
 
 export const ReducerState = Record({
   entities: new OrderedMap({}),
@@ -57,6 +59,12 @@ export default function reducer(state = new ReducerState(), action) {
         ? state.update("selected", selected => selected.remove(payload.uid))
         : state.update("selected", selected => selected.add(payload.uid))
 
+    case DELETE_EVENT_REQUEST:
+      return state.set("loading", true)
+
+    case DELETE_EVENT_SUCCESS:
+      return state.set("loading", false).deleteIn(["entities", payload.uid])
+
     default:
       return state
   }
@@ -86,6 +94,12 @@ export const selectedEventsSelector = createSelector(
   sectionSelector,
   (entities, selection) => selection.map(uid => entities.get(uid))
 )
+export const idSelector = (state, props) => props.uid
+export const eventSelector = createSelector(
+  entitiesSelector,
+  idSelector,
+  (entities, id) => entities.get(id)
+)
 /*
 **Action creators
 */
@@ -101,6 +115,13 @@ export const selectEvent = uid => ({
   type: SELECT_EVENT,
   payload: { uid }
 })
+
+export function deleteEvent(uid) {
+  return {
+    type: DELETE_EVENT_REQUEST,
+    payload: { uid }
+  }
+}
 
 /*
 **Sagas
@@ -152,6 +173,24 @@ export const fetchLazySaga = function*() {
   }
 }
 
+export const deleteEventSaga = function*(action) {
+  const { payload } = action
+  const ref = firebase.database().ref(`events/${payload.uid}`)
+
+  try {
+    yield call([ref, ref.remove])
+
+    yield put({
+      type: DELETE_EVENT_SUCCESS,
+      payload
+    })
+  } catch (_) {}
+}
+
 export const saga = function*() {
-  yield all([fetchAllSaga(), fetchLazySaga()])
+  yield all([
+    fetchAllSaga(),
+    fetchLazySaga(),
+    takeEvery(DELETE_EVENT_REQUEST, deleteEventSaga)
+  ])
 }

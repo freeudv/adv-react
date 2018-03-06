@@ -8,7 +8,9 @@ class SelectedEvents extends Component {
     const { events } = this.props
     return (
       <div>
-        {events.map(event => <EventCard key={event.uid} event={event} />)}
+        {events.map(
+          event => event && <EventCard key={event.uid} event={event} />
+        )}
       </div>
     )
   }
