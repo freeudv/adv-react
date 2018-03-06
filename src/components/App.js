@@ -5,6 +5,8 @@ import { connect } from "react-redux"
 
 import { moduleName, signOut } from "../ducks/auth"
 
+import CustomDragLayer from "./custom-drug-layer"
+
 import AdminPage from "./routes/admin-page"
 import AuthPage from "./routes/auth-page"
 import PeoplePage from "./routes/people-page"
@@ -35,6 +37,7 @@ class App extends Component {
         <ProtectedRoute path="/admin" component={AdminPage} />
         <ProtectedRoute path="/people" component={PeoplePage} />
         <ProtectedRoute path="/events" component={EventsPage} />
+        <CustomDragLayer />
       </div>
     )
   }
