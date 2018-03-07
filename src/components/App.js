@@ -33,11 +33,22 @@ class App extends Component {
     return (
       <div>
         {btn}
+        <ul>
+          <li>
+            <Link to="/admin">admin</Link>
+          </li>
+          <li>
+            <Link to="/people">people</Link>
+          </li>
+          <li>
+            <Link to="/events">events</Link>
+          </li>
+        </ul>
+        <CustomDragLayer />
         <Route path="/auth" component={AuthPage} />
         <ProtectedRoute path="/admin" component={AdminPage} />
         <ProtectedRoute path="/people" component={PeoplePage} />
         <ProtectedRoute path="/events" component={EventsPage} />
-        <CustomDragLayer />
       </div>
     )
   }

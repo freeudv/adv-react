@@ -11,11 +11,11 @@ import { App } from "components"
 const Root = ({ store }) => {
   return (
     <Provider store={store}>
-      <ConnectedRouter history={history}>
-        <DragDropContextProvider backend={HTML5Backend}>
+      <DragDropContextProvider backend={HTML5Backend}>
+        <ConnectedRouter history={history}>
           <App />
-        </DragDropContextProvider>
-      </ConnectedRouter>
+        </ConnectedRouter>
+      </DragDropContextProvider>
     </Provider>
   )
 }
