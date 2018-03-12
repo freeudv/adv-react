@@ -1,7 +1,18 @@
 import firebase from "firebase"
 import { appName } from "../firebaseConfig"
 import { Record, OrderedMap } from "immutable"
-import { put, call, takeEvery, all, select } from "redux-saga/effects"
+import {
+  put,
+  call,
+  takeEvery,
+  all,
+  select,
+  fork,
+  spawn,
+  cancel,
+  cancelled
+} from "redux-saga/effects"
+import { delay } from "redux-saga"
 import { reset } from "redux-form"
 import { createSelector } from "reselect"
 
@@ -107,7 +118,7 @@ export const addEventToPerson = (eventUid, personUid) => ({
 **Sagas
 */
 //export for tests
-export const addPersonSaga = function*(action) {
+export const addPersonSaga = function* (action) {
   const peopleRef = firebase.database().ref("people")
 
   try {
@@ -128,7 +139,7 @@ export const addPersonSaga = function*(action) {
   }
 }
 
-export const fetchAllSaga = function*() {
+export const fetchAllSaga = function* () {
   const ref = firebase.database().ref("people")
 
   try {
@@ -146,7 +157,7 @@ export const fetchAllSaga = function*() {
   }
 }
 
-export const addEventSaga = function*(action) {
+export const addEventSaga = function* (action) {
   const { eventUid, personUid } = action.payload
   const eventsRef = firebase.database().ref(`people/${personUid}/events`)
   const state = yield select(stateSelector)
@@ -161,10 +172,33 @@ export const addEventSaga = function*(action) {
         events
       }
     })
-  } catch (_) {}
+  } catch (_) { }
 }
+
+export const backgroundSyncSaga = function* () {
+  try {
+    while (true) {
+      yield call(fetchAllSaga)
+      yield delay(2000)
+    }
+  } finally {
+    if (yield cancelled()) {
+      console.log("cancelled saga");
+    }
+  }
+}
+
+export const cancellableSync = function* () {
+  const task = yield fork(backgroundSyncSaga)
+  yield delay(6000)
+  yield cancel(task)
+}
+
 //common saga for all actions
-export const saga = function*() {
+export const saga = function* () {
+  //yield fork(backgroundSyncSaga) // method fork and spawn just start saga in background and go to next saga..
+  yield spawn(cancellableSync) // if error method spawn stops only current saga where error occurred
+
   yield all([
     takeEvery(ADD_PERSON_REQUEST, addPersonSaga),
     takeEvery(FETCH_ALL_REQUEST, fetchAllSaga),
